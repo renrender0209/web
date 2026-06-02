@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: cloudmoon-cloud-gaming
+    env: static
+    buildCommand: echo "Static site - no build needed"
+    staticPublishPath: .
+    headers:
+      - path: /_app/immutable/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+    routes:
+      - type: rewrite
+        source: /run-site
+        destination: /run-site/index.html
+      - type: rewrite
+        source: /game/*/*
+        destination: /404.html
+      - type: rewrite
+        source: /*/game/*/*
+        destination: /404.html
